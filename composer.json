@@ -1,0 +1,11 @@
+{
+    "config": {
+        "platform": {
+            "php": "8.2.12"
+        }
+    },
+    "require": {
+        "fidele007/bakong-khqr-php": "^1.2",
+        "endroid/qr-code": "^5.0"
+    }
+}
