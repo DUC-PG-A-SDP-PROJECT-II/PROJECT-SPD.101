@@ -27,9 +27,18 @@ if ($action === 'apply') {
         exit;
     }
 
-    $stmt = $pdo->prepare("SELECT * FROM tbl_coupon WHERE coupon_code = ?");
-    $stmt->execute([$code]);
-    $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
+    $coupon = false;
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM tbl_coupon WHERE coupon_code = ?");
+        $stmt->execute([$code]);
+        $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Coupon system is currently disabled.'
+        ]);
+        exit;
+    }
 
     if (!$coupon) {
         echo json_encode([

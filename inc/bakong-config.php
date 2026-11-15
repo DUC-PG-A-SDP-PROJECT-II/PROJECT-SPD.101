@@ -496,8 +496,12 @@ function verify_bakong_payment($identifier, PDO $pdo) {
 
         // 4. Update coupon usage if coupon applied in session
         if (isset($_SESSION['coupon']['id'])) {
-            $stmt_cpn = $pdo->prepare("UPDATE tbl_coupon SET usage_count = usage_count + 1 WHERE coupon_id = ?");
-            $stmt_cpn->execute([$_SESSION['coupon']['id']]);
+            try {
+                $stmt_cpn = $pdo->prepare("UPDATE tbl_coupon SET usage_count = usage_count + 1 WHERE coupon_id = ?");
+                $stmt_cpn->execute([$_SESSION['coupon']['id']]);
+            } catch (PDOException $e) {
+                // Ignore if tbl_coupon does not exist
+            }
             unset($_SESSION['coupon']);
         }
 

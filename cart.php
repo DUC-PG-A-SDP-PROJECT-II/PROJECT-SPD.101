@@ -89,9 +89,14 @@ if(isset($_POST['apply_coupon'])) {
                 $cart_subtotal += $_SESSION['cart_p_current_price'][$c_i] * $_SESSION['cart_p_qty'][$c_i];
             }
         }
-        $stmt = $pdo->prepare("SELECT * FROM tbl_coupon WHERE coupon_code=? AND status=1");
-        $stmt->execute([$coupon_code]);
-        $cpn = $stmt->fetch(PDO::FETCH_ASSOC);
+        $cpn = false;
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM tbl_coupon WHERE coupon_code=? AND status=1");
+            $stmt->execute([$coupon_code]);
+            $cpn = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $cpn = false;
+        }
 
         if(!$cpn) {
             $coupon_error = "Invalid or inactive coupon code.";
